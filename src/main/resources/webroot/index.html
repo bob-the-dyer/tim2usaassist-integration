@@ -30,6 +30,14 @@
     <p/> Primary country of destination: <input type="text" id="destination_code" value="AU"/> (2 symbols)
     <p/> Effective date/Departure date: <input type="text" id="start" value="2015-10-01"/> (YYYY-MM-DD)
     <p/> Expiration date/Return date: <input type="text" id="end" value="2015-10-14"/> (YYYY-MM-DD)
+    <p/> Number of traveles: <input type="text" id="travelers" value="1"/> (Maximum 8 travelers under same policy transaction)
+    <p/> Trip cost per Traveler: <input type="text" id="trip_cost" value="1000"/> (1 to 20000)
+    <!--TODO how to pass an array-->
+    <p/> First name  for each traveler: <input type="text" id="first_name" value="Vladimir"/> (Array of String 50)
+    <p/> Last name for each traveler: <input type="text" id="last_name" value="Krasilschik"/> (Array of String 50)
+    <p/> Date of birth for each traveler: <input type="text" id="dob" value="1990-01-01"/> (Array of Date, YYYY-MM-DD)
+    <p/> Passport number for each traveler: <input type="text" id="passport" value="29374890142"/> (Array of String 20)
+    <p/> Relationship for each traveler: <input type="text" id="relationship" value="1"/> (Array of Integer)
 
     <p/><button type="button" class="btn btn-default" onclick="sendRequest()">Submit</button>
 
@@ -95,6 +103,13 @@
         jsonObject.destination_code = document.getElementById('destination_code').value;
         jsonObject.start = document.getElementById('start').value;
         jsonObject.end = document.getElementById('end').value;
+        jsonObject.travelers = document.getElementById('travelers').value;
+        jsonObject.trip_cost = document.getElementById('trip_cost').value;
+        jsonObject.first_name = document.getElementById('first_name').value;
+        jsonObject.last_name = document.getElementById('last_name').value;
+        jsonObject.dob = document.getElementById('dob').value;
+        jsonObject.passport = document.getElementById('passport').value;
+        jsonObject.relationship = document.getElementById('relationship').value;
         eb.send('request', jsonObject, function (msg) {
             console.log('received a message: ' + msg);
             document.getElementById('receipt').value = ifexists(msg.receipt);
