@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html ng-app="lat" xmlns="http://www.w3.org/1999/html">
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>USA-ASSIST Integration</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="css/bootstrap-theme.min.css">
+</head>
+<body>
+<div class="well">
+
+    <p/> Plan:
+    <select id="plan_code">
+        <option value="STD">STD</option>
+        <option value="EXE">EXE</option>
+        <option value="GLD">GLD</option>
+        <option value="PLT">PLT</option>
+        <option value="TNM">TNM</option>
+        <option value="DMD">DMD</option>
+    </select>
+
+    <p/> Subscriber Country of Residence: <input type="text" id="country_code" value="US"/> (2 symbols)
+    <p/> Subscriber province or state: <input type="text" id="state" value="Texas"/> (50 symbols)
+    <p/> Subscriber city: <input type="text" id="city" value="Austin"/> (50 symbols)
+    <p/> Subscriber address: <input type="text" id="address" value="Colorado st, 27"/> (70 symbols)
+    <p/> Subscriber zip code/postal code: <input type="text" id="zip_code" value="12345654321"/> (15 symbols)
+    <p/> Subscriber phone: <input type="text" id="phone" value="123456780"/>
+    <p/> Subscriber Email: <input type="text" id="email" value="bob@tim.com"/> (100 symbols)
+    <p/> Primary country of destination: <input type="text" id="destination_code" value="AU"/> (2 symbols)
+    <p/> Effective date/Departure date: <input type="text" id="start" value="2015-10-01"/> (YYYY-MM-DD)
+    <p/> Expiration date/Return date: <input type="text" id="end" value="2015-10-14"/> (YYYY-MM-DD)
+
+    <p/><button type="button" class="btn btn-default" onclick="sendRequest()">Submit</button>
+
+    <p/>Receipt: <input type="text" disabled id="receipt"/>
+
+    <p/>Certificate: <input type="text" disabled id="certificate"/>
+
+    <p/>Total: <input type="text" disabled id="total"/>
+
+    <p/>Error action: <input type="text" disabled id="error.action"/>,
+    key: <input type="text" disabled id="error.key"/>,
+    value: <input type="text" disabled id="error.value"/>,
+    text: <input type="text" disabled id="error.text"/>,
+    <p/>Delay: <input type="text" disabled id="delay"/>
+</div>
+<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+<script type="text/javascript" src="js3rdparty/jquery.min.js"></script>
+<script type="text/javascript" src="js3rdparty/bootstrap.min.js"></script>
+<!--<script type="text/javascript" src="js3rdparty/angular.min.js"></script>-->
+<script type="text/javascript" src="js3rdparty/sockjs-0.3.4.min.js"></script>
+<script type="text/javascript" src='js3rdparty/vertxbus.js'></script>
+<!--<script type="text/javascript" src="js/app.js"></script>-->
+<script>
+    var eb;
+    if (eb != null) {
+        console.log("socket was opened, closing");
+        eb.close();
+    }
+    eb = new vertx.EventBus('/eventbus');
+    eb.onopen = function () {
+        console.log("opening socket");
+    };
+    eb.onclose = function () {
+        console.log("closing socket");
+        eb = null;
+    };
+
+    function ifexists(value) {
+        if (value == null) {
+            return ''
+        } else {
+            return value;
+        }
+    }
+    function sendRequest() {
+        document.getElementById('receipt').value = '';
+        document.getElementById('certificate').value = '';
+        document.getElementById('total').value = '';
+        document.getElementById('error.key').value = '';
+        document.getElementById('error.value').value = '';
+        document.getElementById('error.action').value = '';
+        document.getElementById('error.text').value = '';
+        document.getElementById('delay').value = '';
+        var jsonObject = JSON;
+        jsonObject.plan_code = document.getElementById('plan_code').value;
+        jsonObject.country_code = document.getElementById('country_code').value;
+        jsonObject.state = document.getElementById('state').value;
+        jsonObject.city = document.getElementById('city').value;
+        jsonObject.address = document.getElementById('address').value;
+        jsonObject.zip_code = document.getElementById('zip_code').value;
+        jsonObject.phone = document.getElementById('phone').value;
+        jsonObject.email = document.getElementById('email').value;
+        jsonObject.destination_code = document.getElementById('destination_code').value;
+        jsonObject.start = document.getElementById('start').value;
+        jsonObject.end = document.getElementById('end').value;
+        eb.send('request', jsonObject, function (msg) {
+            console.log('received a message: ' + msg);
+            document.getElementById('receipt').value = ifexists(msg.receipt);
+            document.getElementById('certificate').value = ifexists(msg.certificate);
+            document.getElementById('total').value = ifexists(msg.total);
+            document.getElementById('error.key').value = ifexists(msg.error.key);
+            document.getElementById('error.action').value = ifexists(msg.error.action);
+            document.getElementById('error.value').value = ifexists(msg.error.value);
+            document.getElementById('error.text').value = ifexists(msg.error.text);
+            document.getElementById('delay').value = ifexists(msg.delay);
+        });
+    }
+</script>
+</body>
+</html>
