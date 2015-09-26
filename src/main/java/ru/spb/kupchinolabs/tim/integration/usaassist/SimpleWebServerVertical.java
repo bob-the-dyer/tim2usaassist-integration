@@ -16,8 +16,11 @@ import io.vertx.ext.web.handler.sockjs.PermittedOptions;
 import io.vertx.ext.web.handler.sockjs.SockJSHandler;
 
 import java.util.Set;
+import java.util.logging.Logger;
 
 public class SimpleWebServerVertical extends AbstractVerticle {
+
+    private final static Logger log = Logger.getLogger(SimpleWebServerVertical.class.getName());
 
     // Convenience method so you can run it in your IDE
     public static void main(String[] args) {
@@ -56,12 +59,11 @@ public class SimpleWebServerVertical extends AbstractVerticle {
             buffer.appendString(key).appendString("=").appendString(value).appendString("&");
         }
         String body = buffer.toString();
+        log.info("request to usa-assist: " + body);
         client.request(HttpMethod.POST, "/modules/transact", response -> {
-            System.out.println(response.statusMessage());
-            System.out.println(response.statusCode());
             response.handler(bfr -> {
                 final JsonObject json = new JsonObject(bfr.toString());
-                System.out.println(json.encodePrettily());
+                log.info("response from usa-assist: " + json.encode());
                 message.reply(json);
             });
         }).putHeader("Content-Type", "application/x-www-form-urlencoded")
