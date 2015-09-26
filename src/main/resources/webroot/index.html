@@ -18,6 +18,46 @@
         <option value="PLT">PLT</option>
         <option value="TNM">TNM</option>
         <option value="DMD">DMD</option>
+
+        <option value="GTC">GTC</option>
+        <option value="GTP">GTP</option>
+        <option value="GTK">GTK</option>
+        <option value="GPK">GPK</option>
+        <option value="GTM">GTM</option>
+        <option value="GPM">GPM</option>
+        <option value="GTS">GTS</option>
+        <option value="GPS">GPS</option>
+
+        <option value="SYA">SYA</option>
+        <option value="SYM">SYM</option>
+        <option value="SYL">SYL</option>
+        <option value="SYV">SYV</option>
+        <option value="SYP">SYP</option>
+
+        <option value="M100">M100</option>
+        <option value="M250">M250</option>
+        <option value="M500">M500</option>
+        <option value="M75">M75</option>
+    </select>
+
+    <p/> Additional special cancellation protection:
+    <select id="cancellation">
+        <option value="">No</option>
+        <option value="C">Yes (Only Available for Annual plans)</option>
+    </select>
+
+    <p/> Optional Coinsurance:
+    <select id="coinsurance">
+        <option value="">No</option>
+        <option value="80/20">80/20 (Only Available for Annual plans)</option>
+        <option value="90/10">90/10 (Only Available for Annual plans)</option>
+    </select>
+
+    <p/> Additional Flight Coverage:
+    <select id="flight_coverage">
+        <option value="">No</option>
+        <option value="100000">US$100000</option>
+        <option value="300000">US$300000</option>
     </select>
 
     <p/> Subscriber Country of Residence: <input type="text" id="country_code" value="US"/> (2 symbols)
@@ -35,11 +75,25 @@
     transaction)
     <p/> Trip cost per Traveler: <input type="text" id="trip_cost" value="1000"/> (1 to 20000)
     <p/><!--TODO how to pass an array-->
-    <p/> First name for each traveler: <input type="text" id="first_name1" value="Vladimir"/><input type="text" id="first_name2" value="Valentina"/> (Array of String 50)
-    <p/> Last name for each traveler: <input type="text" id="last_name1" value="Krasilschik"/><input type="text" id="last_name2" value="Krasilschik"/> (Array of String 50)
-    <p/> Date of birth for each traveler: <input type="text" id="dob1" value="1990-01-01"/><input type="text" id="dob2" value="1990-01-01"/> (Array of Date, YYYY-MM-DD)
-    <p/> Passport number for each traveler: <input type="text" id="passport1" value="29374890142"/><input type="text" id="passport2" value="2923450142"/> (Array of String 20)
-    <p/> Relationship for each traveler: <input type="text" id="relationship1" value="1"/><input type="text" id="relationship2" value="2"/> (Array of Integer)
+    <p/> First name for each traveler: <input type="text" id="first_name1" value="Vladimir"/><input type="text"
+                                                                                                    id="first_name2"
+                                                                                                    value="Valentina"/>
+    (Array of String 50)
+    <p/> Last name for each traveler: <input type="text" id="last_name1" value="Krasilschik"/><input type="text"
+                                                                                                     id="last_name2"
+                                                                                                     value="Krasilschik"/>
+    (Array of String 50)
+    <p/> Date of birth for each traveler: <input type="text" id="dob1" value="1990-01-01"/><input type="text" id="dob2"
+                                                                                                  value="1990-01-01"/>
+    (Array of Date, YYYY-MM-DD)
+    <p/> Passport number for each traveler: <input type="text" id="passport1" value="29374890142"/><input type="text"
+                                                                                                          id="passport2"
+                                                                                                          value="2923450142"/>
+    (Array of String 20)
+    <p/> Relationship for each traveler: <input type="text" id="relationship1" value="1"/><input type="text"
+                                                                                                 id="relationship2"
+                                                                                                 value="2"/> (Array of
+    Integer)
     <p/>
 
     <p/> Card number: <input type="text" id="card_num" value="5424000000000015"/> (Integer)
@@ -75,6 +129,7 @@
     key: <input type="text" disabled id="error.key"/>,
     value: <input type="text" disabled id="error.value"/>,
     text: <input type="text" disabled id="error.text" size="60"/>
+
     <p/>Delay: <input type="text" disabled id="delay"/>
 </div>
 <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
@@ -121,6 +176,9 @@
         document.getElementById('uuid').value = '';
         var jsonObject = JSON;
         jsonObject.plan_code = document.getElementById('plan_code').value;
+        jsonObject.cancellation = document.getElementById('cancellation').value;
+        jsonObject.coinsurance = document.getElementById('coinsurance').value;
+        jsonObject.flight_coverage = document.getElementById('flight_coverage').value;
         jsonObject.country_code = document.getElementById('country_code').value;
         jsonObject.state = document.getElementById('state').value;
         jsonObject.city = document.getElementById('city').value;
