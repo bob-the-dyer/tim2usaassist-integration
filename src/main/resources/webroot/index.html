@@ -31,15 +31,15 @@
     <p/> Primary country of destination: <input type="text" id="destination_code" value="AU"/> (2 symbols)
     <p/> Effective date/Departure date: <input type="text" id="start" value="2015-10-01"/> (YYYY-MM-DD)
     <p/> Expiration date/Return date: <input type="text" id="end" value="2015-10-14"/> (YYYY-MM-DD)
-    <p/> Number of traveles: <input type="text" id="travelers" value="1"/> (Maximum 8 travelers under same policy
+    <p/> Number of travelers: <input type="text" id="travelers" value="2"/> (Maximum 8 travelers under same policy
     transaction)
     <p/> Trip cost per Traveler: <input type="text" id="trip_cost" value="1000"/> (1 to 20000)
     <p/><!--TODO how to pass an array-->
-    <p/> First name for each traveler: <input type="text" id="first_name" value="Vladimir"/> (Array of String 50)
-    <p/> Last name for each traveler: <input type="text" id="last_name" value="Krasilschik"/> (Array of String 50)
-    <p/> Date of birth for each traveler: <input type="text" id="dob" value="1990-01-01"/> (Array of Date, YYYY-MM-DD)
-    <p/> Passport number for each traveler: <input type="text" id="passport" value="29374890142"/> (Array of String 20)
-    <p/> Relationship for each traveler: <input type="text" id="relationship" value="1"/> (Array of Integer)
+    <p/> First name for each traveler: <input type="text" id="first_name1" value="Vladimir"/><input type="text" id="first_name2" value="Valentina"/> (Array of String 50)
+    <p/> Last name for each traveler: <input type="text" id="last_name1" value="Krasilschik"/><input type="text" id="last_name2" value="Krasilschik"/> (Array of String 50)
+    <p/> Date of birth for each traveler: <input type="text" id="dob1" value="1990-01-01"/><input type="text" id="dob2" value="1990-01-01"/> (Array of Date, YYYY-MM-DD)
+    <p/> Passport number for each traveler: <input type="text" id="passport1" value="29374890142"/><input type="text" id="passport2" value="2923450142"/> (Array of String 20)
+    <p/> Relationship for each traveler: <input type="text" id="relationship1" value="1"/><input type="text" id="relationship2" value="2"/> (Array of Integer)
     <p/>
 
     <p/> Card number: <input type="text" id="card_num" value="5424000000000015"/> (Integer)
@@ -133,11 +133,21 @@
         jsonObject.end = document.getElementById('end').value;
         jsonObject.travelers = document.getElementById('travelers').value;
         jsonObject.trip_cost = document.getElementById('trip_cost').value;
-        jsonObject.first_name = document.getElementById('first_name').value;
-        jsonObject.last_name = document.getElementById('last_name').value;
-        jsonObject.dob = document.getElementById('dob').value;
-        jsonObject.passport = document.getElementById('passport').value;
-        jsonObject.relationship = document.getElementById('relationship').value;
+        jsonObject.first_name = [];
+        jsonObject.first_name[0] = document.getElementById('first_name1').value;
+        jsonObject.first_name[1] = document.getElementById('first_name2').value;
+        jsonObject.last_name = [];
+        jsonObject.last_name[0] = document.getElementById('last_name1').value;
+        jsonObject.last_name[1] = document.getElementById('last_name2').value;
+        jsonObject.dob = [];
+        jsonObject.dob[0] = document.getElementById('dob1').value;
+        jsonObject.dob[1] = document.getElementById('dob2').value;
+        jsonObject.passport = [];
+        jsonObject.passport[0] = document.getElementById('passport1').value;
+        jsonObject.passport[1] = document.getElementById('passport2').value;
+        jsonObject.relationship = [];
+        jsonObject.relationship[0] = document.getElementById('relationship1').value;
+        jsonObject.relationship[1] = document.getElementById('relationship2').value;
         jsonObject.card_num = document.getElementById('card_num').value;
         jsonObject.card_num = document.getElementById('card_num').value;
         jsonObject.card_exp = document.getElementById('card_exp').value;

@@ -8,6 +8,7 @@ import io.vertx.core.eventbus.Message;
 import io.vertx.core.http.HttpClient;
 import io.vertx.core.http.HttpClientOptions;
 import io.vertx.core.http.HttpMethod;
+import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.handler.BodyHandler;
@@ -47,7 +48,6 @@ public class SimpleWebServerVertical extends AbstractVerticle {
 
     private void handleRequest(Message<JsonObject> message) {
         final JsonObject jsonObject = message.body();
-        //TODO add params from request
         HttpClientOptions options = new HttpClientOptions().setDefaultHost("www.usa-assist.com");
         HttpClient client = vertx.createHttpClient(options);
         Buffer buffer = Buffer.buffer()
@@ -55,9 +55,17 @@ public class SimpleWebServerVertical extends AbstractVerticle {
                 .appendString("password=travel123").appendString("&")
                 .appendString("test=true").appendString("&");
         final Set<String> fieldNames = jsonObject.fieldNames();
-        for (String key: fieldNames){
-            final String value = (String) jsonObject.getValue(key);
-            buffer.appendString(key).appendString("=").appendString(value).appendString("&");
+        for (String key : fieldNames) {
+            final Object jsonObjectValue = jsonObject.getValue(key);
+            if (jsonObjectValue instanceof String) {
+                final String value = (String) jsonObjectValue;
+                buffer.appendString(key).appendString("=").appendString(value).appendString("&");
+            } else {
+                final JsonArray array = (JsonArray) jsonObjectValue;
+                for (int i = 0; i < array.size(); i++) {
+                    buffer.appendString(key).appendString("=").appendString(array.getString(i)).appendString("&");
+                }
+            }
         }
         String body = buffer.toString();
         log.info("request to usa-assist: " + body);
@@ -65,7 +73,7 @@ public class SimpleWebServerVertical extends AbstractVerticle {
             response.handler(bfr -> {
                 final JsonObject json = new JsonObject(bfr.toString());
                 log.info("response from usa-assist: " + json.encode());
-                message.reply(json, new DeliveryOptions().setSendTimeout(60*1000));
+                message.reply(json, new DeliveryOptions().setSendTimeout(60 * 1000));
             });
         }).putHeader("Content-Type", "application/x-www-form-urlencoded")
                 .putHeader("Content-Language", "en-US")
