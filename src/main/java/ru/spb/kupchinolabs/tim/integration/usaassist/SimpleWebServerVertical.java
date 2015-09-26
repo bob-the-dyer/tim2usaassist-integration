@@ -3,6 +3,7 @@ package ru.spb.kupchinolabs.tim.integration.usaassist;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Vertx;
 import io.vertx.core.buffer.Buffer;
+import io.vertx.core.eventbus.DeliveryOptions;
 import io.vertx.core.eventbus.Message;
 import io.vertx.core.http.HttpClient;
 import io.vertx.core.http.HttpClientOptions;
@@ -64,7 +65,7 @@ public class SimpleWebServerVertical extends AbstractVerticle {
             response.handler(bfr -> {
                 final JsonObject json = new JsonObject(bfr.toString());
                 log.info("response from usa-assist: " + json.encode());
-                message.reply(json);
+                message.reply(json, new DeliveryOptions().setSendTimeout(60*1000));
             });
         }).putHeader("Content-Type", "application/x-www-form-urlencoded")
                 .putHeader("Content-Language", "en-US")

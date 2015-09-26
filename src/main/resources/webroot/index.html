@@ -26,31 +26,50 @@
     <p/> Subscriber address: <input type="text" id="address" value="Colorado st, 27"/> (70 symbols)
     <p/> Subscriber zip code/postal code: <input type="text" id="zip_code" value="12345654321"/> (15 symbols)
     <p/> Subscriber phone: <input type="text" id="phone" value="123456780"/>
+
     <p/> Subscriber Email: <input type="text" id="email" value="bob@tim.com"/> (100 symbols)
     <p/> Primary country of destination: <input type="text" id="destination_code" value="AU"/> (2 symbols)
     <p/> Effective date/Departure date: <input type="text" id="start" value="2015-10-01"/> (YYYY-MM-DD)
     <p/> Expiration date/Return date: <input type="text" id="end" value="2015-10-14"/> (YYYY-MM-DD)
-    <p/> Number of traveles: <input type="text" id="travelers" value="1"/> (Maximum 8 travelers under same policy transaction)
+    <p/> Number of traveles: <input type="text" id="travelers" value="1"/> (Maximum 8 travelers under same policy
+    transaction)
     <p/> Trip cost per Traveler: <input type="text" id="trip_cost" value="1000"/> (1 to 20000)
-    <!--TODO how to pass an array-->
-    <p/> First name  for each traveler: <input type="text" id="first_name" value="Vladimir"/> (Array of String 50)
+    <p/><!--TODO how to pass an array-->
+    <p/> First name for each traveler: <input type="text" id="first_name" value="Vladimir"/> (Array of String 50)
     <p/> Last name for each traveler: <input type="text" id="last_name" value="Krasilschik"/> (Array of String 50)
     <p/> Date of birth for each traveler: <input type="text" id="dob" value="1990-01-01"/> (Array of Date, YYYY-MM-DD)
     <p/> Passport number for each traveler: <input type="text" id="passport" value="29374890142"/> (Array of String 20)
     <p/> Relationship for each traveler: <input type="text" id="relationship" value="1"/> (Array of Integer)
+    <p/>
 
-    <p/><button type="button" class="btn btn-default" onclick="sendRequest()">Submit</button>
+    <p/> Card number: <input type="text" id="card_num" value="5424000000000015"/> (Integer)
+    <p/> Card expiration date: <input type="text" id="card_exp" value="03/2017"/> (MM/YYYY)
+    <p/> Card Code Verification: <input type="text" id="card_code" value="123"/> (Integer)
+    <p/> Card holder first name: <input type="text" id="card_fname" value="Bob"/> (String 50)
+    <p/> Card holder last name: <input type="text" id="card_lname" value="Dyer"/> (String 50)
+    <p/> Zip/Postal code of card holder billing statement: <input type="text" id="card_zip" value="124356"/> (String 20)
+    <p/> IP address reference of customer: <input type="text" id="customer_ip" value="255.255.255.255"/> (String)
+    <p/> Total amount for all travelers: <input type="text" id="total" value="350.04"/> (Decimal (2))
+    <p/>
 
+    <p/>
+    <button type="button" class="btn btn-default" onclick="sendRequest()">Submit</button>
     <p/>Receipt: <input type="text" disabled id="receipt"/>
 
     <p/>Certificate: <input type="text" disabled id="certificate"/>
 
-    <p/>Total: <input type="text" disabled id="total"/>
+    <p/>Total: <input type="text" disabled id="totalAmount"/>
 
-    <p/>Error action: <input type="text" disabled id="error.action"/>,
+    <p/>Status: <input type="text" disabled id="status"/>
+
+    <p/>Transaction: <input type="text" disabled id="transaction"/>
+
+    <p/>UUID: <input type="text" disabled id="uuid"/>
+
+    <p/>Error - action: <input type="text" disabled id="error.action"/>,
     key: <input type="text" disabled id="error.key"/>,
     value: <input type="text" disabled id="error.value"/>,
-    text: <input type="text" disabled id="error.text"/>,
+    text: <input type="text" disabled id="error.text"/>
     <p/>Delay: <input type="text" disabled id="delay"/>
 </div>
 <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
@@ -85,12 +104,15 @@
     function sendRequest() {
         document.getElementById('receipt').value = '';
         document.getElementById('certificate').value = '';
-        document.getElementById('total').value = '';
+        document.getElementById('totalAmount').value = '';
         document.getElementById('error.key').value = '';
         document.getElementById('error.value').value = '';
         document.getElementById('error.action').value = '';
         document.getElementById('error.text').value = '';
         document.getElementById('delay').value = '';
+        document.getElementById('status').value = '';
+        document.getElementById('transaction').value = '';
+        document.getElementById('uuid').value = '';
         var jsonObject = JSON;
         jsonObject.plan_code = document.getElementById('plan_code').value;
         jsonObject.country_code = document.getElementById('country_code').value;
@@ -110,16 +132,30 @@
         jsonObject.dob = document.getElementById('dob').value;
         jsonObject.passport = document.getElementById('passport').value;
         jsonObject.relationship = document.getElementById('relationship').value;
+        jsonObject.card_num = document.getElementById('card_num').value;
+        jsonObject.card_num = document.getElementById('card_num').value;
+        jsonObject.card_exp = document.getElementById('card_exp').value;
+        jsonObject.card_code = document.getElementById('card_code').value;
+        jsonObject.card_fname = document.getElementById('card_fname').value;
+        jsonObject.card_lname = document.getElementById('card_lname').value;
+        jsonObject.card_zip = document.getElementById('card_zip').value;
+        jsonObject.customer_ip = document.getElementById('customer_ip').value;
+        jsonObject.total = document.getElementById('totalAmount').value;
         eb.send('request', jsonObject, function (msg) {
             console.log('received a message: ' + msg);
             document.getElementById('receipt').value = ifexists(msg.receipt);
             document.getElementById('certificate').value = ifexists(msg.certificate);
-            document.getElementById('total').value = ifexists(msg.total);
-            document.getElementById('error.key').value = ifexists(msg.error.key);
-            document.getElementById('error.action').value = ifexists(msg.error.action);
-            document.getElementById('error.value').value = ifexists(msg.error.value);
-            document.getElementById('error.text').value = ifexists(msg.error.text);
+            document.getElementById('totalAmount').value = ifexists(msg.total);
             document.getElementById('delay').value = ifexists(msg.delay);
+            document.getElementById('status').value = ifexists(msg.status);
+            document.getElementById('transaction').value = ifexists(msg.transaction);
+            document.getElementById('uuid').value = ifexists(msg.uuid);
+            if (msg.error != null) {
+                document.getElementById('error.key').value = ifexists(msg.error.key);
+                document.getElementById('error.action').value = ifexists(msg.error.action);
+                document.getElementById('error.value').value = ifexists(msg.error.value);
+                document.getElementById('error.text').value = ifexists(msg.error.text);
+            }
         });
     }
 </script>
